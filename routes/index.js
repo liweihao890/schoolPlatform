@@ -38,4 +38,5 @@ router.get('/web/res_c', (req, res)=>{
     res.render('web/resources_content.html');
 });
 
+
 export default router;

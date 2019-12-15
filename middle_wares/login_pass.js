@@ -1,5 +1,5 @@
 export default (req, res, next)=>{
-    console.log(req.path);
+    // console.log(req.path);
     // 1. 过滤所有非后端请求
     if(req.path.indexOf('/back/') === -1){ // 没有找到
        return next();

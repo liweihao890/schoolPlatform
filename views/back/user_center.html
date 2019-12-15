@@ -105,7 +105,7 @@
 <script>
     $(function () {
        // 1.1 获取本地的token
-       let token = JSON.parse(sessionStorage.getItem('result')).token;
+       let token = JSON.parse(localStorage.getItem('result')).token;
         console.log(token);
 
        // 1.2 根据token请求数据

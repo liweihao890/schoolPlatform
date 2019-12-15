@@ -14,6 +14,7 @@ const S_KEY = '@WaLk1314?.ItikE.Com.#';
   itlike
   123
 */
+
 router.post('/user/api/add', (req, res, next)=>{
      const user_name = req.body.user_name || '';
      const user_pwd =  md5(req.body.user_pwd + S_KEY) || '';
@@ -39,7 +40,7 @@ router.post('/user/api/add', (req, res, next)=>{
 
 });
 /*
- 用户名和密码进行登录
+用户名和密码进行登录
 */
 router.post('/user/api/login', (req, res, next)=>{
     // 1. 获取数据
@@ -47,9 +48,9 @@ router.post('/user/api/login', (req, res, next)=>{
     const user_pwd = req.body.user_pwd;
 
 
-    console.log('----------------------------');
-    console.log(req.body);
-    console.log('----------------------------');
+    // console.log('----------------------------');
+    // console.log(req.body);
+    // console.log('----------------------------');
 
     // 2. 查询数据
     User.findOne({user_name: user_name}, (err, user)=>{
@@ -60,7 +61,7 @@ router.post('/user/api/login', (req, res, next)=>{
         if(user !== null){
             // 2.2 判断密码
             if(user.user_pwd === user_pwd){ // 密码匹配成功
-                console.log(req.session);
+                // console.log(req.session);
                 // session中存token
                 req.session.token =  user._id;
 
@@ -80,7 +81,7 @@ router.post('/user/api/login', (req, res, next)=>{
             }
         }else{
             res.json({
-                status: 1,
+                status: 0,
                 result: '输入口令不存在!'
             });
         }
@@ -138,7 +139,8 @@ router.get('/back/user/api/u_msg_all/:token', (req, res, next)=>{
                 status: 200,
                 result: user
             })
-        }else {
+    }else { 
+        //token 失效了，要销毁session
             req.session.cookie.maxAge = 0;
         }
     })
@@ -185,6 +187,53 @@ router.post('/back/user/api/edit', (req, res, next)=>{
     });
 });
 
+/****
+ * 根据token修改密码
+ */
+router.post('/back/user/api/reset',(req,res,next)=>{
+    //拿到传过来的token,旧密码,新密码
+    const token = req.body.token;
+    const old_pwd = req.body.old_pwd;
+    const new_pwd = req.body.new_pwd;
+    //根据token查询数据库
+    User.findById(token,(err,user)=>{
+        if(err){
+            return next(err)
+        }
+        // 查询不到
+        if(!user){
+            res.json({
+                status: 0,
+                result:{
+                    message: '用户不存在或者token已过期'
+                }
+            })
+        }else if(user.user_pwd !== old_pwd){
+            //密码不匹配
+            res.json({
+                status: 1,
+                result:{
+                    message: '用户密码错误!'
+                }
+            })
+        }else{
+            //更新数据库中的密码
+            user.user_pwd = new_pwd;
+            //保存到数据库
+            user.save((err,result) => {
+               if(err){
+                   return next(err)
+               }
+               res.json({
+                   status: 200,
+                   result:{
+                       message: '密码修改成功!!'
+                   }
+               })
+            })
+        }
+    })
+})
 /********************************数据接口API-end**********************************/
 
 

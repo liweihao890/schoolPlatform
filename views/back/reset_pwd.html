@@ -1,47 +1,120 @@
 {% extends "back/base.html"%}
 
 <!--新增的样式-->
-{% block style %}
-{% endblock %}
+{% block style %} {% endblock %}
 
 <!--主要内容-->
 {% block body %}
 <div class="container-fluid">
-    <!-- 修改密码 -->
-    <div class="body">
-        <div class="repass">
-            <form action="" class="form-horizontal col-md-offset-2">
-                <div class="form-group">
-                    <label for="" class="col-md-3 control-label">原密码</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control input-sm">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-md-3 control-label">新密码</label>
-                    <div class="col-md-4">
-                        <input type="password" class="form-control input-sm">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-md-3 control-label">确认密码</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control input-sm">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-7">
-                        <input type="submit" class="btn btn-success btn-danger  pull-right" value="修 改">
-                        <input type="submit" class="btn btn-success btn-warning pull-right" value="返 回" style="margin-right: 10px;">
-
-                    </div>
-                </div>
-            </form>
+  <!-- 修改密码 -->
+  <div class="body">
+    <div class="repass">
+      <form action="" class="form-horizontal col-md-offset-2">
+        <div class="form-group">
+          <label for="" class="col-md-3 control-label">原密码</label>
+          <div class="col-md-4">
+            <input
+            type="password"
+              class="form-control input-sm"
+              name="old_pwd"
+              id="old_pwd"
+              required
+            />
+          </div>
         </div>
+        <div class="form-group">
+          <label for="" class="col-md-3 control-label">新密码</label>
+          <div class="col-md-4">
+            <input
+              type="password"
+              class="form-control input-sm"
+              name="new_pwd"
+              id="new_pwd"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="" class="col-md-3 control-label">确认密码</label>
+          <div class="col-md-4">
+            <input
+            type="password"
+              class="form-control input-sm"
+              id="confirm_pwd"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-7">
+            <input
+              type="button"
+              class="btn btn-success btn-danger  pull-right"
+              value="修 改"
+              id="btn-reset"
+            />
+            <a href="/back/u_set" class="btn btn-success btn-warning pull-right"
+                           style="margin-right: 10px;">返 回</a>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}
 
 <!--脚本-->
 {% block script %}
+<script src="./js/md5.js"></script>
+<script>
+    const IKServer = "http://localhost:3000"
+  $(function() {
+    
+    //监听修改按钮
+    $("#btn-reset").on("click", () => {
+      //拿到新旧密码和确认密码
+      
+      const old_pwd = $("#old_pwd").val();
+      const new_pwd = $("#new_pwd").val();
+      const confirm_pwd = $("#confirm_pwd").val();
+      //新密码和确认密码不匹配
+      if (new_pwd !== confirm_pwd) {
+        alert("请检查确认密码!");
+      } else {
+          // 盐
+          const S_KEY = '@WaLk1314?.ItikE.Com.#';
+          //进行md5加密,拿到token
+          let md5_old_pwd = md5(old_pwd + S_KEY);
+        let md5_new_pwd = md5(new_pwd + S_KEY);
+        const token = JSON.parse(localStorage.getItem("result")).token;
+        $.ajax({
+          type: "post",
+          url: IKServer + "/back/user/api/reset",
+          dataType: "json",
+          data: `token=${token}&old_pwd=${md5_old_pwd}&new_pwd=${md5_new_pwd}`,
+          success: function(data) {
+              console.log(data);
+              
+            if (data.status !== 200) {
+              alert("原始密码不正确");
+              //清空输入框
+              $("#old_pwd").val("");
+            } else {
+              alert("密码修改成功,重新登录");
+              //退出登录,重新登录
+              $.get(IKServer+'/back/user/api/logout',(data)=>{
+                  if(data.status === 200){
+                      //删除本地的token
+                      localStorage.removeItem('result')
+                      //回到登录界面
+                      window.location.href = '/back/login'
+                  }
+              })
+            }
+          }
+        });
+      }
+    });
+  });
+</script>
 {% endblock %}

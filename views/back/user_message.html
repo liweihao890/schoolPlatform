@@ -21,7 +21,7 @@
 <script>
     $(function () {
         // 1.1 获取本地的token
-        let token = JSON.parse(sessionStorage.getItem('result')).token;
+        let token = JSON.parse(localStorage.getItem('result')).token;
         console.log(token);
 
         // 1.2 根据token请求数据
@@ -131,7 +131,7 @@
                                 processData: false,
                                 contentType: false,
                                 success: function (data) {
-                                    console.log(data);
+                                    // console.log(data);
                                     if(data.status === 200){ // 修改成功
                                         alert('用户信息修改成功!');
                                         window.location.href = '/back/u_center'
@@ -149,7 +149,7 @@
             });
         } else {
             // 删除本地数据
-            sessionStorage.removeItem('result');
+            localStorage.removeItem('result');
             // 跳转到登录页面
             window.location.href = '/back/login';
         }
