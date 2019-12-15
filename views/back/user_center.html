@@ -14,26 +14,8 @@
             <li><a href="javascript:;">用户管理</a></li>
             <li class="active">个人中心</li>
         </ol>
-        <div class="profile">
-            <div class="pull-left">
-                <img src="./uploads/avatar.png" class="img-circle pull-left" alt="" style="border: 2px solid #006ebc; ">
-                <span class="name">撩课-叶建华</span>
-                <span>一句话介绍一下自己吧，让别人更了解你！</span>
-            </div>
-            <ul class="pull-right list-inline">
-                <li>
-                    <span>积分</span>
-                    <a href="javascript:;">120</a>
-                </li>
-                <li>
-                    <span>等级</span>
-                    <a href="javascript:;">10</a>
-                </li>
-                <li>
-                    <span>金币</span>
-                    <a href="javascript:;">10000</a>
-                </li>
-            </ul>
+        <div id="user_msg" class="profile">
+
         </div>
         <div class="courses">
             <ul class="navs list-unstyled">
@@ -120,4 +102,55 @@
 
 <!--脚本-->
 {% block script %}
+<script>
+    $(function () {
+       // 1.1 获取本地的token
+       let token = JSON.parse(sessionStorage.getItem('result')).token;
+        console.log(token);
+
+       // 1.2 根据token请求数据
+       if(token){
+           $.ajax({
+               url: 'http://localhost:3000/back/user/api/u_msg/' + token,
+               type: 'get',
+               dataType: 'json',
+               success: function (data) {
+                   console.log(data);
+                   if(data.status === 200){
+                       // 2.1 注入数据
+                       let tpl = `
+                      <div class="pull-left">
+                            <img src="${data.result.icon_url ? '/uploads/' + data.result.icon_url : './uploads/avatar.png'}" class="img-circle pull-left" alt="" style="border: 2px solid #006ebc; ">
+                            <span class="name">${data.result.real_name}</span>
+                            <span>${data.result.intro_self}</span>
+                        </div>
+                        <ul class="pull-right list-inline">
+                            <li>
+                                <span>积分</span>
+                                <a href="javascript:;">${data.result.points}</a>
+                            </li>
+                            <li>
+                                <span>等级</span>
+                                <a href="javascript:;">${data.result.rank}</a>
+                            </li>
+                            <li>
+                                <span>金币</span>
+                                <a href="javascript:;">${data.result.gold}</a>
+                            </li>
+                        </ul>
+                   `;
+                       $('#user_msg').html(tpl);
+                   }else {
+                       alert('获取用户信息失败!');
+                   }
+               }
+           });
+       } else {
+           // 删除本地数据
+           sessionStorage.removeItem('result');
+           // 跳转到登录页面
+           window.location.href = '/back/login';
+       }
+    });
+</script>
 {% endblock %}

@@ -1,6 +1,9 @@
 import express from 'express'
 import User from './../models/User'
 import md5 from 'blueimp-md5'
+import {basename} from 'path'
+import formidable from 'formidable'
+import config from './../src/config'
 const router = express.Router({});
 
 const S_KEY = '@WaLk1314?.ItikE.Com.#';
@@ -35,7 +38,6 @@ router.post('/user/api/add', (req, res, next)=>{
     });
 
 });
-
 /*
  用户名和密码进行登录
 */
@@ -58,8 +60,10 @@ router.post('/user/api/login', (req, res, next)=>{
         if(user !== null){
             // 2.2 判断密码
             if(user.user_pwd === user_pwd){ // 密码匹配成功
-                // 在session中存储客户端的信息
-                req.session.token = user._id;
+                console.log(req.session);
+                // session中存token
+                req.session.token =  user._id;
+
                 // 2.3 登录成功
                 res.json({
                     status: 200,
@@ -80,6 +84,104 @@ router.post('/user/api/login', (req, res, next)=>{
                 result: '输入口令不存在!'
             });
         }
+    });
+});
+/*
+  退出登录
+*/
+router.get('/back/user/api/logout', (req, res, next)=>{
+    // 销毁session
+    // 方式1: 将cookie的时间设置为0，只有cookie中携带的信息通过客户端请求传到服务器，由对应的session接收session才起作用，cookie没了session自然而然的将不起作用
+    req.session.cookie.maxAge = 0;
+
+    // 方式二: destroy
+   /* req.session.destroy((err)=>{
+        return next(err);
+    });*/
+
+    // 提示用户
+    res.json({
+       status: 200,
+       result: '退出登录成功!'
+    });
+
+});
+/*
+  获取用户信息-部分
+*/
+router.get('/back/user/api/u_msg/:token', (req, res, next)=>{
+    User.findById(req.params.token, '-_id icon_url real_name intro_self points rank gold', (err, user)=>{
+        if(err){
+            return next(err);
+        }
+        if(user){
+            res.json({
+                status: 200,
+                result: user
+            })
+        }else {
+            req.session.cookie.maxAge = 0;
+        }
+    })
+});
+
+/*
+  获取用户信息-所有
+*/
+router.get('/back/user/api/u_msg_all/:token', (req, res, next)=>{
+    User.findById(req.params.token, '-_id -user_name -user_pwd -l_edit -c_time', (err, user)=>{
+        if(err){
+            return next(err);
+        }
+        if(user){
+            res.json({
+                status: 200,
+                result: user
+            })
+        }else {
+            req.session.cookie.maxAge = 0;
+        }
+    })
+});
+
+/*
+  根据id(token)去修改一条用户信息
+*/
+router.post('/back/user/api/edit', (req, res, next)=>{
+    const form = new formidable.IncomingForm();
+    form.uploadDir = config.uploadPath;  // 上传图片放置的文件夹
+    form.keepExtensions = true; // 保持文件的原始扩展名
+    form.parse(req, (err, fields, files)=>{
+        if(err){
+            return next(err);
+        }
+        // 1. 取出普通字段
+        let body = fields;
+        // console.log(body);
+        // 2. 根据id查询文档
+        User.findById(body.token, (err, user)=>{
+            if(err){
+                return next(err);
+            }
+            // 2.1 修改文档的内容
+            user.real_name = body.real_name;
+            user.icon_url = body.icon_url || basename(files.icon_url.path);
+
+            user.phone = body.phone;
+            user.e_mail = body.e_mail;
+            user.join_time = body.join_time;
+            user.intro_self = body.intro_self;
+            // 2.2 保存
+            user.save((err, result)=>{
+                if(err){
+                    return next(err);
+                }
+                res.json({
+                    status: 200,
+                    result: '用户信息修改成功!'
+                })
+            });
+        });
     });
 });
 
