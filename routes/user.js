@@ -1,93 +1,109 @@
 import express from 'express'
 import User from './../models/User'
 import md5 from 'blueimp-md5'
-const router = express.Router({})
-//前后端约定的秘钥头部分,俗称盐
-const S_KEY = '@QWcdkkLk1314?.ItikE.Com.#';
-/****接口API  Start */
-router.post('/user/api/add',(req,res,next) => {
-   //拿到传过来的用户名和密码
-   const user_name = req.body.user_name || '';
-   const user_pwd = md5(req.body.user_pwd + S_KEY) || '' ;//对密码进行md5加密
-   //生成文档
-   const user = new User({
-       user_name: user_name,
-       user_pwd : user_pwd
-   })
-   //保存到数据库
-   user.save((err,result) => {
-      if(err){
-          return next(err)
-      }
-      res.json({
-          status: 200,
-          result: '添加管理员成功!!!'
-      })
-   })
+const router = express.Router({});
 
-})
+const S_KEY = '@WaLk1314?.ItikE.Com.#';
 
-//登录接口
-router.post('/user/api/login',(req,res,next)=>{
-    //拿到用户名和密码
-    const user_name = req.body.user_name
-    const user_pwd = req.body.user_pwd
-    // 根据用户名查询数据库
-    User.findOne({user_name: user_name},(err,user) => {
-       if(err){
-           return next(err)
-       }
-       //如果用户不存在
-       if(!user){
-           res.json({
-               status: 0,
-               result: '输入的口令不存在'
-           })
-       }else if(user.user_pwd !== user_pwd){
-        //    如果密码错误
+/********************************数据接口API-start**********************************/
+/*
+  生成后台管理员
+  itlike
+  123
+*/
+router.post('/user/api/add', (req, res, next)=>{
+     const user_name = req.body.user_name || '';
+     const user_pwd =  md5(req.body.user_pwd + S_KEY) || '';
+
+     // 操作数据库
+    const user = new User({
+       // 用户名
+        user_name: user_name,
+       // 密码
+        user_pwd: user_pwd
+    });
+
+    // 存储
+    user.save((err, result)=>{
+        if(err){
+            return next(err);
+        }
+        res.json({
+           status: 200,
+           result: '添加管理员成功!'
+        });
+    });
+
+});
+
+/*
+ 用户名和密码进行登录
+*/
+router.post('/user/api/login', (req, res, next)=>{
+    // 1. 获取数据
+    const user_name = req.body.user_name;
+    const user_pwd = req.body.user_pwd;
+
+
+    console.log('----------------------------');
+    console.log(req.body);
+    console.log('----------------------------');
+
+    // 2. 查询数据
+    User.findOne({user_name: user_name}, (err, user)=>{
+        if(err){
+            return next(err);
+        }
+        // 2.1 如果用户存在
+        if(user !== null){
+            // 2.2 判断密码
+            if(user.user_pwd === user_pwd){ // 密码匹配成功
+                // 在session中存储客户端的信息
+                req.session.token = user._id;
+                // 2.3 登录成功
+                res.json({
+                    status: 200,
+                    result: {
+                        token: user._id,
+                        message: '登录成功'
+                    }
+                });
+            }else {
+                res.json({
+                    status: 1,
+                    result: '输入密码有误!'
+                });
+            }
+        }else{
             res.json({
                 status: 1,
-                result: '密码错误'
-            })
-       }else{
-          
-           res.json({
-               status: 200,
-                result: {
-                    token: user._id,
-                    message: '登录成功'
-                }
-           })
-       }
-    })
-})
+                result: '输入口令不存在!'
+            });
+        }
+    });
+});
+
+/********************************数据接口API-end**********************************/
 
 
+/********************************页面的路由-start**********************************/
+router.get('/back/login', (req, res, next)=>{
+    res.render('back/login.html');
+});
 
+router.get('/back/u_center', (req, res, next)=>{
+    res.render('back/user_center.html');
+});
 
-/****接口API  End */
+router.get('/back/u_set', (req, res, next)=>{
+    res.render('back/user_message.html');
+});
 
-/****用户界面Start */
-// 用户登录
-router.get('/back/login',(req,res,next)=>{
-    res.render('back/login.html')
-})
-// 用户中心
-router.get('/back/u_center',(req,res,next) => {
-   res.render('back/user_center.html')
-})
-// 用户信息展示列表
-router.get('/back/u_list',(req,res,next) => {
-    res.render('back/user_list.html')
- })
-//  用户信息编辑
- router.get('/back/u_message',(req,res,next) => {
-    res.render('back/user_message.html')
- })
-//用户密码修改
-router.get('/back/u_reset_pwd',(req,res,next)=>{
-    res.render('back/reset_pwd.html')
-})
-/****用户界面End */
+router.get('/back/u_reset_pwd', (req, res, next)=>{
+    res.render('back/reset_pwd.html');
+});
+
+/********************************页面的路由-end**********************************/
 
 export default router;
+

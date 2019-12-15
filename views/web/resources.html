@@ -80,12 +80,12 @@
 </div>
 <!--logo end-->
 
-
+<!--轮播图begin-->
 <div class="mainWrap clearfix">
 	<div class="banner_pagex">
     	<ul class="banner_box">
             {% for sowing in sowings%}
-            <li class="{{sowing.className}}" style="background:url(/uploads/{{sowing.image_url}}) no-repeat top center">
+            <li class="{{sowing.image_tag}}" style="background:url('/uploads/{{sowing.image_url}}') no-repeat top center">
                 <a href="{{sowing.image_link}}" target="_blank"></a>
             </li>
             {% endfor %}
@@ -97,9 +97,8 @@
             <li></li>
         </ul>
     </div>
-    </div>
 </div>
-<!--主体内容end-->
+<!--轮播图end-->
 
 <!--主体部分开始-->
 <div class="mainwraper">
@@ -115,7 +114,7 @@
             <div class="sort_right">共有<span class="lm_desc_num">3732</span>条资源，供您选择学习</div>
             <div class="resource_cons no_top">
                 <div class="resource_con">
-                <a href="resources_content.html">
+                <a href="/web/res_c">
                     <div class="resource_con_pic">
                         <img src="Images/resource_con_pic_1.jpg"/>
                     </div>
@@ -292,7 +291,6 @@
 </div>
 
 <!--footer-->
-
 <!--右功能按钮分享客服回到顶部-->
 <div id="rig_box">
     <div class="edu-widgets">  
@@ -320,7 +318,6 @@
 </div>
 <!--右功能按钮结束-->
 </div>
-
 <div class="tool-area clearfix">
     <div class="w1280">
         <div class="tool_a_l fl">
@@ -363,8 +360,8 @@
 </div>
 <div class="footerbar clearfix">
     <div class="w1280">
-        <p>主办单位：中华人名共和国教育部  运行维护：中央电化教育馆  技术支持：今日教育集团</p>
-        <p>国家教育资源公共服务平台 版权所有 京ICP备0905918号-3</p>
+        <p>主办单位：撩课学院  运行维护：撩课学院技术团队  技术支持：撩课教育集团</p>
+        <p>国家教育资源公共服务平台 版权所有 京ICP备itLike号-001</p>
     </div>
 </div>
 

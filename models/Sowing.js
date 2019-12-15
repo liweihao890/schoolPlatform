@@ -1,21 +1,15 @@
 import mongoose from 'mongoose'
-//连接数据库
-mongoose.connect('mongodb://localhost/college',{useNewUrlParser: true,useUnifiedTopology: true});
-//监听链接数据库的状态
-mongoose.connection.on('open',()=>{
-    console.log('连接数据库成功');
-    
-})
-
+mongoose.connect('mongodb://localhost/college', {useNewUrlParser: true});
+mongoose.connection.on('open', ()=>{
+    console.log('数据库连接成功！');
+});
 mongoose.connection.on('error', (err)=>{
     throw err;
 });
 
-//创建轮播图模式对象
+// 创建轮播图的模式对象
 const sowingSchema = mongoose.Schema({
-    
     // 图片名称
-    
     image_title: {type: String, required: true},
     // 图片地址
     image_url: {type: String, required: true},
@@ -31,6 +25,7 @@ const sowingSchema = mongoose.Schema({
     c_time: {type: Date, default: Date.now()},
 });
 
-const Sowing = mongoose.model('Sowing', sowingSchema)
+const Sowing = mongoose.model('Sowing', sowingSchema);
+export default Sowing;
 
-export default Sowing
+

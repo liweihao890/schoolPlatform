@@ -1,5 +1,4 @@
-<!--继承base.html的基础模板-->
-{% extends "back/base.html" %}
+{% extends "back/base.html"%}
 
 <!--新增的样式-->
 {% block style %}
@@ -13,13 +12,13 @@
         <!-- 面包屑 -->
         <ol class="breadcrumb">
             <li><a href="javascript:;">用户管理</a></li>
-            <li class="active">用户信息</li>
+            <li class="active">个人中心</li>
         </ol>
         <div class="profile">
             <div class="pull-left">
-                <img src="./uploads/avatar.png" class="img-circle pull-left" alt="">
-                <span class="name">撩课学院</span>
-                <span>喜欢IT, 就上撩课！</span>
+                <img src="./uploads/avatar.png" class="img-circle pull-left" alt="" style="border: 2px solid #006ebc; ">
+                <span class="name">撩课-叶建华</span>
+                <span>一句话介绍一下自己吧，让别人更了解你！</span>
             </div>
             <ul class="pull-right list-inline">
                 <li>
@@ -34,116 +33,91 @@
                     <span>金币</span>
                     <a href="javascript:;">10000</a>
                 </li>
-            </ul>                   
+            </ul>
         </div>
         <div class="courses">
             <ul class="navs list-unstyled">
                 <li>
-                    <a href="javascript:;" class="active">全部</a>
-                </li>
-                <li>
-                    <a href="javascript:;">在学</a>
-                </li>
-                <li>
-                    <a href="javascript:;">完成</a>
+                    <a href="javascript:;" class="active">
+                        <h4>我的收藏</h4>
+                    </a>
                 </li>
             </ul>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_1.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_2.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_3.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_4.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_1.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_2.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
             <div class="course">
                 <div class="pic">
-                    <img src="./uploads/course_3.png" alt="">
-                    <span class="percent">100%</span>
+                    <img src="./images/live_con_pic_1.jpg" alt="">
+                    <span class="percent">80%</span>
                 </div>
                 <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
-                </div>
-            </div>
-            <div class="course">
-                <div class="pic">
-                    <img src="./uploads/course_4.png" alt="">
-                    <span class="percent">100%</span>
-                </div>
-                <div class="info">
-                    <a href="javascript:;">撩课大前端—Vue项目实战—撩多多商城</a>
-                    <p>2019-10-26学习至 <span>L1 第一章 学前准备</span></p>
+                    <a href="javascript:;">母亲情绪平和是对孩子最好的教育</a>
+                    <p>来自 <span>张菲菲教授</span></p>
                 </div>
             </div>
         </div>
-        <!-- 分页 -->
-        <ul class="pagination pull-right">
-            <li><a href="#">上一页</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">下一页</a></li>
-        </ul>
     </div>
 </div>
 {% endblock %}
 
 <!--脚本-->
 {% block script %}
-
 {% endblock %}

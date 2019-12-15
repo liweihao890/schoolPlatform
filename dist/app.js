@@ -9,9 +9,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var app = (0, _express2.default)();
 
 app.get('/', function (req, res) {
-    res.end('hello');
+    res.end('<h1>Hello, itLike!</h1>');
 });
 
-app.listen(3000, function (req, res) {
-    console.log('Server is running');
+app.listen(3000, function () {
+    console.log('服务器已经启动');
 });

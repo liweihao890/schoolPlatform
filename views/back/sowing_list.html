@@ -1,12 +1,10 @@
-<!--继承base.html的基础模板-->
-{% extends "back/base.html" %}
+{% extends "back/base.html"%}
 
 <!--新增的样式-->
 {% block style %}
-
 {% endblock %}
 
-<!-- 主要内容 -->
+<!--主要内容-->
 {% block body %}
 <div class="container-fluid">
     <div class="body advert">
@@ -18,61 +16,38 @@
             <a href="/back/s_add" class="btn btn-danger btn-sm pull-right">添加轮播图</a>
         </div>
         <div class="panel panel-default">
-            <div class="panel-body">
-                <form action="" class="form-inline">
-                    <select name="" class="form-control input-sm">
-                        <option value="">按课程</option>
-                    </select>
-                    <select name="" class="form-control input-sm">
-                        <option value="">按学科</option>
-                    </select>
-                    <select name="" class="form-control input-sm">
-                        <option value="">按热度</option>
-                    </select>
-                    <select name="" class="form-control input-sm">
-                        <option value="">按日期</option>
-                    </select>
-                    <button class="btn btn-primary btn-sm">排序</button>
-                </form>
-            </div>
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <td>序号</td>
-                        <th>图片名称</th>
-                        <th>图片缩略图</th>
-                        <th>跳转链接</th>
-                        <th>上架时间</th>
-                        <th>下架时间</th>
-                        <th>操作</th>
-                    </tr>
+                <tr>
+                    <td>序号</td>
+                    <th>图片名称</th>
+                    <th>图片缩略图</th>
+                    <th>跳转链接</th>
+                    <th>上架时间</th>
+                    <th>下架时间</th>
+                    <th>操作</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for sowing in sowings %}
-                    <tr>
-                        <td>{{loop.index}}</td>
-                        <td>{{sowing.image_title}}</td>
-                        <!-- <td>{{sowing.image_url}}</td> -->
-                        <td>
-                            <img src="/uploads/{{sowing.image_url}}" alt="" style="width: 200px;margin: 0 auto;">
-                        </td>
-                        <td >
-                            <!-- <a href="{{sowing.image_link}}" target="_blank">点我访问原图</a> -->
-                            {{sowing.image_link}}
-                        </td>
-                        <td>{{sowing.s_time}}</td>
-                        <td>{{sowing.e_time}}</td>
-                        <td>
-                            <!-- <a href="/back/s_edit" class="btn btn-primary btn-xs">编辑</a> -->
-                            <a class="btn btn-primary btn-xs btn-edit" data-sid="{{sowing._id}}">编辑</a>
-                            <a  class="btn btn-danger btn-xs btn-del" data-sid="{{sowing._id}}">删除</a>
-                        </td>
-                    </tr>
+                    {% for sowing in  sowings %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{sowing.image_title}}</td>
+                            <td>
+                                <img src="/uploads/{{sowing.image_url}}" alt="" style="width: 200px;">
+                            </td>
+                            <td>{{sowing.image_link}}</td>
+                            <td>{{sowing.s_time}}</td>
+                            <td>{{sowing.e_time}}</td>
+                            <td>
+                                <a data-id="{{sowing._id}}" class="btn btn-primary btn-xs btn-edit">编辑</a>
+                                <a data-id="{{sowing._id}}" class="btn btn-danger btn-xs btn-del">删除</a>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        
     </div>
 </div>
 {% endblock %}
@@ -80,37 +55,36 @@
 <!--脚本-->
 {% block script %}
 <script>
-    $(function() {
-       //拿到编辑按钮元素
-        $('.btn-edit').on('click',function() {
-           //拿到id
-          const _id = $(this)[0].dataset['sid']
-       //跳转到编辑界面,并将ID传过去
-            window.location.href = '/back/s_edit?sid=' + _id
-        })
-    //监听删除按钮
-        $('.btn-del').on('click',function () {
+    $(function () {
+        // 1. 点击了修改按钮
+        $('.btn-edit').on('click', function () {
+            let sowingId = $(this).attr('data-id');
+            // 传递id
+            window.location.href = `/back/s_edit?sid=${sowingId}`;
+        });
+
+        // 2. 点击了删除按钮
+        $('.btn-del').on('click', function () {
+            let sowingId = $(this).attr('data-id');
+            // 2.1 发起ajax
             $.ajax({
-                url: 'http://localhost:3000/sowing/api/remove/'+ $(this)[0].dataset['sid'],
-                method: 'get',
-                dataType: 'json',
-                success: function (data) {
-                    if(data.status === 200){
-                        alert('删除成功')
-                       
-                    }else{
-                        alert('删除失败')
-                    }
-                     //重新渲染
-                     window.location.reload()
-                },
-                error: function(err) {
-                   console.log(err);
-                }
-            })
-        })
-    })
+               url:'http://localhost:3000/back/sowing/api/remove/' + sowingId,
+               type: 'get',
+               dataType: 'json',
+               success: function (data) {
+                   console.log(data);
+                   if(data.status === 200){
+                       alert('删除成功!');
+                   }else {
+                       alert('删除失败!');
+                   }
+                   // 重新渲染页面
+                   window.location.reload();
+               }
+            });
+        });
+
+    });
 </script>
+
 {% endblock %}
-
-
