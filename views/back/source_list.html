@@ -16,8 +16,7 @@
         >添加文章</a
       >
     </div>
-    <div class="panel panel-default">
-      {% if sources.length >0 %}
+    <div class="panel panel-default" id="panel_content">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -30,77 +29,133 @@
             <th>操作</th>
           </tr>
         </thead>
-        <tbody>
-          {% for source in sources %}
-          <tr>
-            <td>{{loop.index}}</td>
-            <td>{{source.title}}</td>
-            <td style="width: 200px;">
-              <img
-                src="/uploads/{{source.small_img}}"
-                alt=""
-                style="object-fit: contain;max-width: 100%;max-height: 100px;"
-              />  
-            </td>
-            <td>{{source.is_store}}</td>
-            <td>{{source.price}}</td>
-            <td>{{source.author}}</td>
-            <td>
-              <a
-                data-id="{{source._id}}"
-                class="btn btn-primary btn-xs btn-edit"
-                >编辑</a
-              >
-              <a data-id="{{source._id}}" class="btn btn-danger btn-xs btn-del"
-                >删除</a
-              >
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
+        <tbody id="tbody"></tbody>
       </table>
-      {% else %}
-      <div style=" text-align: center">
-          <img src="./images/liao.jpg" alt="" style="width: 200px;margin: 0 auto" >
-          <h3>还没有文章哟,赶快去添加吧~</h3>
-      </div>
-      {% endif %}
     </div>
+    <!-- 分页  有刷新,而且样式不好控制 -->
+    <!-- <ul class="pagination pull-right">
+      {% if (page-1) === 0%}
+      <li><a  class="pointer-events: none" >上一页</a></li>
+      {% else %}
+      <li><a href="/back/source_list?page={{page-1}}">上一页</a></li>
+      {% endif%}
+      
+      {% for i in range(0, totalPage) -%}
+        {% if(i+1) === page %}
+          <li class="active"><a href="/back/source_list?page={{i+1}}" >{{i+1}}</a></li>
+        {% else %}
+          <li><a href="/back/source_list?page={{i+1}}">{{i+1}}</a></li>
+        {% endif%}
+      {%- endfor %}
+      
+      {% if (page+1) > totalPage%}
+      <li><a  class="pointer-events: none" >下一页</a></li>
+      {% else %}
+      <li><a href="/back/source_list?page={{page+1}}">下一页</a></li>
+      {% endif%}
+    </ul> -->
+    <!-- 分页  采用分页组件,无刷新,体验较好 -->
+    <!-- 分页 -->
+    <ul id="pagination" class="pagination pull-right"></ul>
   </div>
 </div>
 {% endblock %}
 
 <!--脚本-->
 {% block script %}
+<script src="./js/jquery.twbsPagination.js"></script>
 <script>
-  //1. 监听编辑按钮的点击
-  $('.btn-edit').on('click',function () {
-    //1.1 获取点击的文章的id
-    let sourceId = $(this).attr('data-id')
-    //1.2 跳转到对应的页面,并且将id传过去
-    window.location.href = `/back/source_edit?sid=${sourceId}`
-  })
-  //2. 监听删除按钮的点击
-  $('.btn-del').on('click',function () {
-     //2.1 获取点击的文章的id
-     let sourceId = $(this).attr('data-id')
-     //2.2 发起删除请求
-     $.ajax({
-       url: 'http://localhost:3000' + '/back/source/api/remove/' + sourceId,
-       type: 'get',
-       success: function (data) {
-         if(data.status === 200){
-          alert('删除文章成功')
-         window.location.reload()
-         }else{
-           alert('删除失败')
-         }
-         
-       }
-     })
-
-  })
-  
+  $(function() {
+    //1. 获取总页数
+    let pageSize = 3;
+    //2.获取文章列表
+    $.ajax({
+      url: "http://localhost:3000" + "/back/source/api/count",
+      type: "get",
+      success: function(data) {
+        if (data.status === 200) {
+          //初始化分页组件
+          $("#pagination").twbsPagination({
+            totalPages: Math.ceil(data.result / pageSize),
+            visiblePages: 5,
+            first: "首页",
+            prev: "上一页",
+            next: "下一页",
+            last: "尾页",
+            onPageClick: function(event, page) {
+              //加载数据
+              loadData(page, pageSize);
+            }
+          });
+          
+        }
+      }
+    });
+  });
+  function loadData(page, pageSize) {
+    $.ajax({
+      url: "http://localhost:3000" + "/back/source/api/list",
+      type: "get",
+      data: {
+        page: page,
+        pageSize: pageSize
+      },
+      success: function(data) {
+        let tpl = "";
+        $(data.result).each((index, source) => {
+          tpl += `
+                  <tr>
+                  <td>${index + 1}</td>
+                  <td>${source.title}</td>
+                  <td>
+                      <img src="/uploads/${
+                        source.small_img
+                      }" alt="" style="width: 200px;">
+                  </td>
+                  <td>${source.is_store}</td>
+                  <td>${source.price}</td>
+                  <td>${source.author}</td>
+                  <td>
+                      <a data-id="${
+                        source._id
+                      }" class="btn btn-primary btn-xs btn-edit">编辑</a>
+                      <a data-id="${
+                        source._id
+                      }" class="btn btn-danger btn-xs btn-del">删除</a>
+                  </td>
+              </tr>
+              `;
+          $("#tbody").html(tpl);
+          //3. 监听编辑按钮的点击
+          $(".btn-edit").on("click", function() {
+            //1.1 获取点击的文章的id
+            let sourceId = $(this).attr("data-id");
+            //1.2 跳转到对应的页面,并且将id传过去
+            window.location.href = `/back/source_edit?sid=${sourceId}`;
+          });
+          //4. 监听删除按钮的点击
+          $(".btn-del").on("click", function() {
+            //2.1 获取点击的文章的id
+            let sourceId = $(this).attr("data-id");
+            //2.2 发起删除请求
+            $.ajax({
+              url:
+                "http://localhost:3000" + "/back/source/api/remove/" + sourceId,
+              type: "get",
+              success: function(data) {
+                if (data.status === 200) {
+                  alert("删除文章成功");
+                  window.location.reload();
+                } else {
+                  alert("删除失败");
+                }
+              }
+            });
+          });
+        });
+      }
+    });
+  }
 </script>
 
 {% endblock %}

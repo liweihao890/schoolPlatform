@@ -56,6 +56,7 @@
           <button
             type="button"
             class="btn btn-lg btn-danger btn-block btn-login"
+            id="btn_login"
           >
             登 录
           </button>
@@ -67,51 +68,45 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="./js/md5.js"></script>
     <script>
-$(function () {
-    $('.btn-login').on('click', login());
-    //监听回车事件
-    $(document).keyup(function(e){
-    var key = e.which;
-    if(key==13){
-        login()
-    }
-    });
-})
+      $(function() {
+        $("#btn_login").on("click", () => {
+          // 0. 盐
+          const S_KEY = "@WaLk1314?.ItikE.Com.#";
 
-/**
- * 用户登录
-*/
-function login() {
-    // 0. 盐
-    const S_KEY = '@WaLk1314?.ItikE.Com.#';
+          // 1. 获取用户名和密码
+          let user_name = $("#user_name").val();
+          let user_pwd = $("#user_pwd").val();
+          let md5_user_pwd = md5(user_pwd + S_KEY);
 
-    // 1. 获取用户名和密码
-    let user_name = $('#user_name').val();
-    let user_pwd = $('#user_pwd').val();
-    let md5_user_pwd = md5(user_pwd + S_KEY);
-
-    // 2. 发起ajax请求
-    let $form = $('form');
-    $.ajax({
-        url: $form .attr('action'),
-        type:$form .attr('method'),
-        data: `user_name=${user_name}&user_pwd=${md5_user_pwd}`,
-        success: function (data) {
-            console.log(data);
-            if(data.status === 200){ // 登录成功
+          // 2. 发起ajax请求
+          let $form = $("form");
+          $.ajax({
+            url: $form.attr("action"),
+            type: $form.attr("method"),
+            data: `user_name=${user_name}&user_pwd=${md5_user_pwd}`,
+            success: function(data) {
+              console.log(data);
+              if (data.status === 200) {
+                // 登录成功
                 // 存储token到本地
-                localStorage.setItem('result', JSON.stringify(data.result));
+                localStorage.setItem("result", JSON.stringify(data.result));
+                sessionStorage.setItem('selectedTag', 'one');
+                sessionStorage.setItem('userSelectedTag', '');
                 // 跳转到后端的主界面
-                window.location.href = '/back';
-            }else { // 登录失败
+                window.location.href = "/back";
+              } else {
+                // 登录失败
                 alert(data.result);
                 // 清空输入框
-                $('#user_name').val('');
-                $('#user_pwd').val('');
+                $("#user_name").val("");
+                $("#user_pwd").val("");
+              }
             }
-        }
-    });
-};
+          });
+        });
+      });
+
+     
     </script>
   </body>
 </html>
