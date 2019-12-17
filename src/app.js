@@ -15,6 +15,8 @@ const mongoStore  = require('connect-mongo')(session);
 import indexRouter from './../routes/index'
 import sowingRouter from './../routes/sowing'
 import userRouter from './../routes/user'
+import sourceRouter from './../routes/source'
+
 
 const app = express();
 
@@ -52,6 +54,7 @@ app.use(loginPass);
 app.use(indexRouter);
 app.use(sowingRouter);
 app.use(userRouter);
+app.use(sourceRouter);
 
 
 // 5. 挂载错误中间件

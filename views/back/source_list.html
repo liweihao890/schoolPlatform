@@ -1,0 +1,106 @@
+{% extends "back/base.html"%}
+
+<!--新增的样式-->
+{% block style %} {% endblock %}
+
+<!--主要内容-->
+{% block body %}
+<div class="container-fluid">
+  <div class="body advert">
+    <ol class="breadcrumb">
+      <li><a href="/back/source_list">资源管理</a></li>
+      <li class="active">资源文章列表</li>
+    </ol>
+    <div class="page-title">
+      <a href="/back/source_add" class="btn btn-danger btn-sm pull-right"
+        >添加文章</a
+      >
+    </div>
+    <div class="panel panel-default">
+      {% if sources.length >0 %}
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td>序号</td>
+            <th>标题</th>
+            <th>缩略图</th>
+            <th>是否收藏</th>
+            <th>价格</th>
+            <th>作者</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for source in sources %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{source.title}}</td>
+            <td style="width: 200px;">
+              <img
+                src="/uploads/{{source.small_img}}"
+                alt=""
+                style="object-fit: contain;max-width: 100%;max-height: 100px;"
+              />  
+            </td>
+            <td>{{source.is_store}}</td>
+            <td>{{source.price}}</td>
+            <td>{{source.author}}</td>
+            <td>
+              <a
+                data-id="{{source._id}}"
+                class="btn btn-primary btn-xs btn-edit"
+                >编辑</a
+              >
+              <a data-id="{{source._id}}" class="btn btn-danger btn-xs btn-del"
+                >删除</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style=" text-align: center">
+          <img src="./images/liao.jpg" alt="" style="width: 200px;margin: 0 auto" >
+          <h3>还没有文章哟,赶快去添加吧~</h3>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<!--脚本-->
+{% block script %}
+<script>
+  //1. 监听编辑按钮的点击
+  $('.btn-edit').on('click',function () {
+    //1.1 获取点击的文章的id
+    let sourceId = $(this).attr('data-id')
+    //1.2 跳转到对应的页面,并且将id传过去
+    window.location.href = `/back/source_edit?sid=${sourceId}`
+  })
+  //2. 监听删除按钮的点击
+  $('.btn-del').on('click',function () {
+     //2.1 获取点击的文章的id
+     let sourceId = $(this).attr('data-id')
+     //2.2 发起删除请求
+     $.ajax({
+       url: 'http://localhost:3000' + '/back/source/api/remove/' + sourceId,
+       type: 'get',
+       success: function (data) {
+         if(data.status === 200){
+          alert('删除文章成功')
+         window.location.reload()
+         }else{
+           alert('删除失败')
+         }
+         
+       }
+     })
+
+  })
+  
+</script>
+
+{% endblock %}
