@@ -28,23 +28,8 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                    {% for sowing in  sowings %}
-                        <tr>
-                            <td>{{loop.index}}</td>
-                            <td>{{sowing.image_title}}</td>
-                            <td>
-                                <img src="/uploads/{{sowing.image_url}}" alt="" style="width: 200px;">
-                            </td>
-                            <td>{{sowing.image_link}}</td>
-                            <td>{{sowing.s_time}}</td>
-                            <td>{{sowing.e_time}}</td>
-                            <td>
-                                <a data-id="{{sowing._id}}" class="btn btn-primary btn-xs btn-edit">编辑</a>
-                                <a data-id="{{sowing._id}}" class="btn btn-danger btn-xs btn-del">删除</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                <tbody id="sowing_list">
+                    
                 </tbody>
             </table>
         </div>
@@ -56,35 +41,69 @@
 {% block script %}
 <script>
     $(function () {
-        // 1. 点击了修改按钮
-        $('.btn-edit').on('click', function () {
-            let sowingId = $(this).attr('data-id');
-            // 传递id
-            window.location.href = `/back/s_edit?sid=${sowingId}`;
-        });
-
-        // 2. 点击了删除按钮
-        $('.btn-del').on('click', function () {
-            let sowingId = $(this).attr('data-id');
-            // 2.1 发起ajax
-            $.ajax({
-               url: LK.SERVER + 'back/sowing/api/remove/' + sowingId,
-               type: 'get',
-               dataType: 'json',
-               success: function (data) {
-                   console.log(data);
-                   if(data.status === 200){
-                       alert('删除成功!');
-                   }else {
-                       alert('删除失败!');
-                   }
-                   // 重新渲染页面
-                   window.location.reload();
-               }
-            });
-        });
+       loadData()
 
     });
+    function loadData() {
+        $.ajax({
+            url: LK.SERVER + 'back/sowing/api/list',
+            type: 'get',
+            success: function (data) {
+                console.log(data);
+                
+                let tpl = '';
+                $(data.result).each((index,sowing)=>{
+                    tpl += `
+                    <tr>
+                            <td>${index+1}</td>
+                            <td>${sowing.image_titl}}</td>
+                            <td>
+                                <img src="/uploads/${sowing.image_url}" alt="" style="width: 200px;">
+                            </td>
+                            <td>${sowing.image_link}</td>
+                            <td>${sowing.s_time}</td>
+                            <td>${sowing.e_time}</td>
+                            <td>
+                                <a data-id="${sowing._id}" class="btn btn-primary btn-xs btn-edit">编辑</a>
+                                <a data-id="${sowing._id}" class="btn btn-danger btn-xs btn-del">删除</a>
+                            </td>
+                        </tr>
+                    
+                    `;
+                    $('#sowing_list').html(tpl);
+                });
+                // 1. 点击了修改按钮
+                $('.btn-edit').on('click', function () {
+                    let sowingId = $(this).attr('data-id');
+                    // 传递id
+                    window.location.href = `/back/s_edit?sid=${sowingId}`;
+                });
+
+                // 2. 点击了删除按钮
+                $('.btn-del').on('click', function () {
+                    let sowingId = $(this).attr('data-id');
+                    // 2.1 发起ajax
+                    $.ajax({
+                    url: LK.SERVER + 'back/sowing/api/remove/' + sowingId,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if(data.status === 200){
+                            alert('删除成功!');
+                        }else {
+                            alert('删除失败!');
+                        }
+                        // 重新渲染页面
+                        window.location.reload();
+                    }
+                    });
+                });
+                
+            }
+
+        })
+    }
 </script>
 
 {% endblock %}
