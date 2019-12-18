@@ -105,16 +105,19 @@
         formData.append("image_url", files[0]);
         // 发起ajax请求
         $.ajax({
-          url: "http://localhost:3000" + "/back/source/api/add_img",
+          url: LK.SERVER + "/back/source/api/add_img",
           type: "post",
           data: formData,
           processData: false,
           contentType: false,
           success: function(data) {
             console.log(data);
+            console.log(LK.SERVER);
+            
             if (data.status === 200) {
               // 上传成功
-              insert(data.result);
+            
+              insert(LK.SERVER + data.result);
             } else {
               alert("添加图片失败");
             }

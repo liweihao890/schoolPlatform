@@ -82,7 +82,7 @@
       success: function(data) {
         //注入数据
         let tpl = `
-      <form action="/back/source/api/edit" method="post" class="form-horizontal" enctype="multipart/form-data">
+      <form class="form-horizontal" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="" class="col-md-2 control-label">标题</label>
                     <div class="col-md-5">
@@ -130,7 +130,7 @@
         let editor = new E("#editor");
         // 2.3 自定义上传图片事件
         editor.customConfig.customUploadImg = function(files, insert) {
-          console.log(files);
+          // console.log(files);
           // 2.1 上传图片到服务器
           if (files.length > 0) {
             // 有图片文件
@@ -145,7 +145,6 @@
               processData: false,
               contentType: false,
               success: function(data) {
-                console.log(data);
                 if (data.status === 200) {
                   // 上传成功
                   insert(data.result);
@@ -186,12 +185,14 @@
             formData.append('content',content)
           //4.4 发起修改请求
           $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
+            url: LK.SERVER + "back/source/api/edit",
+            type: 'post',
             data: formData,
             processData: false,
             contentType: false,
             success: function (data) {
+              // console.log(data);
+              
               if(data.status === 200){
                 alert('修改文章成功')
                 window.location.href = '/back/source_list'
