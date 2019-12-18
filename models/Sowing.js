@@ -1,11 +1,4 @@
 import mongoose from 'mongoose'
-mongoose.connect('mongodb://localhost/college', {useNewUrlParser: true});
-mongoose.connection.on('open', ()=>{
-    console.log('数据库连接成功！');
-});
-mongoose.connection.on('error', (err)=>{
-    throw err;
-});
 
 // 创建轮播图的模式对象
 const sowingSchema = mongoose.Schema({

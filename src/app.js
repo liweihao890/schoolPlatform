@@ -1,6 +1,7 @@
 import express from 'express'
 import config from './config'
 import nunjucks from 'nunjucks'
+import db from './../db/db'
 
 import bodyParser from './../middle_wares/body_parser'
 import errorLog from './../middle_wares/error_log'
@@ -22,15 +23,15 @@ const app = express();
 
 // 6. 使用session
 app.use(session({
-    secret:'itlike',//加密字符串
-    name:'like_id',//返回客户端key的名称，默认为connect_sid
+    secret:config.secret,//加密字符串
+    name:config.name,//返回客户端key的名称，默认为connect_sid
     resave:false,//强制保存session，即使它没有变化
     saveUninitialized:true,//强制将未初始化的session存储。当新建一个session且未设定属性或值时，它就处于未初始化状态。在设定cookie前，这对于登录验证，减轻服务器存储压力，权限控制是有帮助的，默认为true
-    cookie:{maxAge:1800000 },
+    cookie:{maxAge:config.maxAge },
     rolling:true, //在每次请求时进行设置cookie，将重置cookie过期时间
     store:new mongoStore({//将session数据存储到mongo数据库中
-        url:'mongodb://127.0.0.1/college', //数据库地址
-        touchAfter:24*3600  //多长时间往数据库中更新存储一次，除了在会话数据上更改了某些数据除外
+        url:config.db_url, //数据库地址
+        touchAfter:config.maxAge  //多长时间往数据库中更新存储一次，除了在会话数据上更改了某些数据除外
     })
 }));
 
@@ -64,6 +65,6 @@ app.use((req, res)=>{
     res.render('404.html');
 });
 
-app.listen(3000, ()=>{
-    console.log('服务器已经启动');
+app.listen(config.port, ()=>{
+    console.log(`服务器已经启动,端口号是${config.port}`);
 });
