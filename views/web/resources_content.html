@@ -11,6 +11,7 @@
     <script type="text/javascript" src="Scripts/common.js"></script>
     <!---焦点图js-->
     <script type="text/javascript" src="Scripts/scroll.js"></script>
+    <script src="./Scripts/config.js"></script>
     <!--页面中滚动及从下到上滚动js-->
     <style type="text/css">
       .content01y {
@@ -437,7 +438,7 @@
         const id = getQueryString("source_id");
         //2. 发起获取文章详情请求
         $.ajax({
-          url: "http://localhost:3000" + `/web/source/api/content/${id}`,
+          url: LK.SERVER+ `web/source/api/content/${id}`,
           type: "get",
           success: function(data) {
               console.log(data);

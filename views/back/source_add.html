@@ -139,7 +139,7 @@
             formData.append('content',content)
             $.ajax({
                 type: 'post',
-                url: 'http://localhost:3000' + '/back/source/api/add',
+                url: LK.SERVER + 'back/source/api/add',
                 data: formData,
                 processData: false,
                 contentType: false,

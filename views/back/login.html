@@ -23,8 +23,8 @@
           <img src="./uploads/logo.jpg" class="img-circle" alt="" />
         </div>
         <form
-          action="http://localhost:3000/user/api/login"
-          method="post"
+          
+          
           class="col-md-offset-1 col-md-10"
         >
           <div class="input-group input-group-lg">
@@ -67,6 +67,7 @@
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="./js/md5.js"></script>
+    <script src="js/config.js"></script>
     <script>
       $(function() {
         $("#btn_login").on("click", () => {
@@ -79,10 +80,9 @@
           let md5_user_pwd = md5(user_pwd + S_KEY);
 
           // 2. 发起ajax请求
-          let $form = $("form");
           $.ajax({
-            url: $form.attr("action"),
-            type: $form.attr("method"),
+            url: LK.SERVER + "user/api/login",
+            type: 'post',
             data: `user_name=${user_name}&user_pwd=${md5_user_pwd}`,
             success: function(data) {
               console.log(data);

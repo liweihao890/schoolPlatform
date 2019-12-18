@@ -67,7 +67,7 @@
 {% block script %}
 <script src="./js/md5.js"></script>
 <script>
-    const IKServer = "http://localhost:3000"
+    
   $(function() {
     
     //监听修改按钮
@@ -89,7 +89,7 @@
         const token = JSON.parse(localStorage.getItem("result")).token;
         $.ajax({
           type: "post",
-          url: IKServer + "/back/user/api/reset",
+          url: LK.SERVER + "back/user/api/reset",
           dataType: "json",
           data: `token=${token}&old_pwd=${md5_old_pwd}&new_pwd=${md5_new_pwd}`,
           success: function(data) {
@@ -102,7 +102,7 @@
             } else {
               alert("密码修改成功,重新登录");
               //退出登录,重新登录
-              $.get(IKServer+'/back/user/api/logout',(data)=>{
+              $.get(LK.SERVER+'back/user/api/logout',(data)=>{
                   if(data.status === 200){
                       //删除本地的token
                       localStorage.removeItem('result')

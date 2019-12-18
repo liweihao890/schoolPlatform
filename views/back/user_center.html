@@ -111,7 +111,7 @@
        // 1.2 根据token请求数据
        if(token){
            $.ajax({
-               url: 'http://localhost:3000/back/user/api/u_msg/' + token,
+               url: LK.SERVER + 'back/user/api/u_msg/' + token,
                type: 'get',
                dataType: 'json',
                success: function (data) {

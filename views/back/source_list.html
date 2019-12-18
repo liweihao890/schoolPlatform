@@ -70,7 +70,7 @@
     let pageSize = 3;
     //2.获取文章列表
     $.ajax({
-      url: "http://localhost:3000" + "/back/source/api/count",
+      url: LK.SERVER + "back/source/api/count",
       type: "get",
       success: function(data) {
         if (data.status === 200) {
@@ -94,7 +94,7 @@
   });
   function loadData(page, pageSize) {
     $.ajax({
-      url: "http://localhost:3000" + "/back/source/api/list",
+      url: LK.SERVER + "back/source/api/list",
       type: "get",
       data: {
         page: page,
@@ -140,7 +140,7 @@
             //2.2 发起删除请求
             $.ajax({
               url:
-                "http://localhost:3000" + "/back/source/api/remove/" + sourceId,
+                LK.SERVER+ "back/source/api/remove/" + sourceId,
               type: "get",
               success: function(data) {
                 if (data.status === 200) {

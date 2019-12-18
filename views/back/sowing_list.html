@@ -68,7 +68,7 @@
             let sowingId = $(this).attr('data-id');
             // 2.1 发起ajax
             $.ajax({
-               url:'http://localhost:3000/back/sowing/api/remove/' + sowingId,
+               url: LK.SERVER + 'back/sowing/api/remove/' + sowingId,
                type: 'get',
                dataType: 'json',
                success: function (data) {

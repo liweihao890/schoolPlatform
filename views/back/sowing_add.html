@@ -14,7 +14,7 @@
             <li class="active">添加轮播图</li>
         </ol>
         <div class="advert-add">
-            <form action="/back/sowing/api/add" method="post" class="form-horizontal" enctype="multipart/form-data">
+            <form  class="form-horizontal" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="" class="col-md-3 control-label">图片名称</label>
                     <div class="col-md-5">
@@ -63,8 +63,8 @@
        // 1. 添加一条记录
       $('form').on('submit', function () {
           $.ajax({
-              url: $(this).attr('action'),
-              type:$(this).attr('method'),
+              url:LK.SERVER + 'back/sowing/api/add',
+              type:'post',
               data: new FormData($(this)[0]),
               processData: false,
               contentType: false,

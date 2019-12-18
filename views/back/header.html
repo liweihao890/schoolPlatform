@@ -15,10 +15,11 @@
     </nav>
 </div>
 <script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="js/config.js"></script>
 <script>
     $(function () {
         $('.logout').on('click', ()=>{
-            $.get('http://localhost:3000/back/user/api/logout', (data)=>{
+            $.get(LK.SERVER+'back/user/api/logout', (data)=>{
                 if(data.status === 200){ // 退出登录成功
                     alert(data.result);
                     // 删除本地数据

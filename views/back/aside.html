@@ -8,7 +8,7 @@
     </div>
 </div>
 <script src="./js/jquery.js"></script>
-<script src="./js/config.js"></script>
+<script src="js/config.js"></script>
 <script>
     $(function () {
         // 0. 处理选中
@@ -64,7 +64,7 @@
         // 1.2 根据token请求用户信息
         if(token){
             $.ajax({
-                url: 'http://localhost:3000' + '/back/user/api/u_msg/' + token,
+                url: LK.SERVER + 'back/user/api/u_msg/' + token,
                 type: 'get',
                 dataType: 'json',
                 success: function (data) {

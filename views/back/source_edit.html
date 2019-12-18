@@ -76,7 +76,7 @@
     let sid = getQueryString("sid");
     // 2. 发起ajax请求,获取数据
     $.ajax({
-      url: "http://localhost:3000" + `/back/source/api/singer/${sid}`,
+      url: LK.SERVER + `back/source/api/singer/${sid}`,
       type: "get",
       dataType: "json",
       success: function(data) {
@@ -139,7 +139,7 @@
             formData.append("image_url", files[0]);
             // 发起ajax请求
             $.ajax({
-              url: "http://localhost:3000/back/source/api/add_img",
+              url: LK.SERVER + "back/source/api/add_img",
               type: "post",
               data: formData,
               processData: false,
